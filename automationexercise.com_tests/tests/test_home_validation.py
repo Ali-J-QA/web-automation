@@ -1,16 +1,13 @@
+# test_home_validation.py
 import pytest
-from selenium import webdriver
 from pages.home_page import HomePage
-from config import Config  
+from config import Config
 
 @pytest.fixture
-def driver():
-    driver = webdriver.Chrome()
-    driver.get(Config.URL) 
-    yield driver
-    driver.quit()
+def home_page(driver):
+    return HomePage(driver)
 
-def test_home_element_color(driver):
-    home_page = HomePage(driver)
-    home_page.wait_for_home_element() 
-    home_page.validate_home_element_color() 
+def test_home_element_color(home_page):
+    home_page.open()  
+    element_color = home_page.get_home_element_color()
+    assert element_color == Config.EXPECTED_COLOR, f"Expected color {Config.EXPECTED_COLOR}, but got {element_color}"
